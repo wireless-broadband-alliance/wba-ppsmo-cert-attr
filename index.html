@@ -31,6 +31,9 @@
     font-family: sans-serif;
     font-size: 200%;
   }
+
+  code { white-space: pre }
+
 </style>
 
 <body>
@@ -68,9 +71,9 @@
         
         <hr>
         
-        <p><b>TAKE NOTE</b></p>
+        <b>TAKE NOTE</b>
         
-        <p><b>This is an initial proposal used to submit the URI definition for allocation of a provisional URI scheme with IANA. The IANA registration for the "hs20" URI scheme is available here: <a href="https://www.iana.org/assignments/uri-schemes/prov/hs20">https://www.iana.org/assignments/uri-schemes/prov/hs20</a>. The expectation is that this specification will be refined, following feedback from implementors.</b></p>
+        <b>This is an initial proposal used to submit the URI definition for allocation of a provisional URI scheme with IANA. The IANA registration for the "hs20" URI scheme is available here: <a href="https://www.iana.org/assignments/uri-schemes/prov/hs20">https://www.iana.org/assignments/uri-schemes/prov/hs20</a>. The expectation is that this specification will be refined, following feedback from implementors.</b>
         
         <hr>
         
@@ -135,151 +138,152 @@
         <h1>3.	hs20 URI Scheme Syntax</h1>
         
         <p>This document uses the Augmented Backus-Naur Form (ABNF) of <a href="#RFC5234">[RFC5234]</a>.</p>
-        
+
         <code>
-        ;-------------------------------------------------------------------------------<br>
-        ; URI based Hotspot2.0 Profile Provisioning<br>
-        ;<br>
-        ; Wireless Broadband Alliance Inc.<br>
-        ; 2024-05-28<br>
-        ;-------------------------------------------------------------------------------<br>
-        <br>
-        hs20uri  = "hs20://" authority "/" [ keyValues ]<br>
-        <br>
-        keyValues     = keyValuePair *( ";" keyValuePair )<br>
-        <br>
-        keyValuePair  =  "home_ois" "=" OI *[ "%2C" OI] <br>
-        keyValuePair  =/ "required_home_ois" "=" OI *[ "%2C" OI]       <br>       
-        keyValuePair  =/ "roaming_consortiums" "=" OI *[ "%2C" OI]<br>
-        <br>
-        keyValuePair  =/ "domain" "=" FQDN *[ "%2C" FQDN]<br>
-        keyValuePair  =/ "domain_suffix_match" "=" FQDN *[ "%2C" FQDN]<br>
-        keyValuePair  =/ "roaming_partner" "=" FQDN "%2C" MATCH "%2C" PRIORITY <br>
-                                               "%2C" COUNTRYCODE<br>
-                                               <br>
-        keyValuePair  =/ "excluded_ssid" "=" SSID *[ "%2C" SSID]<br>
-        <br>
-        keyValuePair  =/ "priority" "=" PRIORITY<br>
-        keyValuePair  =/ "ocsp" "=" STAPLING<br>
-        keyValuePair  =/ "realm" "=" FQDN<br>
-        keyValuePair  =/ "username" "=" pctencoded-username<br>
-        <br>
-        <br>
-        ;-------------------------------------------------------------------------------<br>
-        ; Definitions<br>
-        ;-------------------------------------------------------------------------------<br>
-        <br>
-        authority               = ALPHA *( ALPHA / DIGIT / "-" / "." )<br>
-        DIGIT                   = %x30-39 ; 0-9<br>
-        NZDIGIT                 = %x31-39 ; 1-9<br>
-        U4DIGIT                 = %x30-34 ; 0-4<br>
-        U5DIGIT                 = %x30-35 ; 0-5<br>
-        ALPHA                   = %x41-5A / %x61-7A<br>
-        unreservedAndPctEncoded = unreserved / pct-encoded <br>
-        unreserved              = ALPHA / DIGIT / "-" / "." / "_" / "~"<br>
-        pct-encoded             = "%" UPPERHEXDIG UPPERHEXDIG<br>
-        UPPERHEXDIG             = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"<br>
-        LOWERHEXDIG             = DIGIT / "a" / "b" / "c" / "d" / "e" / "f"<br>
-        OI                      = 6*10LOWERHEXDIG<br>
-        MATCH                   = "0" / "1"<br>
-                                ; 0 exact match.<br>
-                                ; 1 include subdomains.<br>
-                                <br>
-        PRIORITY                = DIGIT / (NZDIGIT DIGIT) / ("1" DIGIT DIGIT) / <br>
-                                  ("2" U4DIGIT DIGIT) / ("2" U5DIGIT U5DIGIT)<br>
-                                ; 0...255<br>
-                                <br>
-        COUNTRYCODE             = 2*ALPHA / "%2A" <br>
-                                ; where %2A is the percent encoding of "*"<br>
-        FQDN                    = 1*( label "." ) label<br>
-        pctencoded-username	    = pctencodedstring *("." pctencodedstring)<br>
-        pctencodedstring        = 1*pctencdedutf8-atext<br>
-        pctencdedutf8-atext	    = ALPHA/ DIGIT /<br>
-                                  UTF8-xtra-char /<br>
-                                  "%21" / "%23" / "%24" / "%25" /<br>
-                                  "%26" / "%27" / "%2A" / "%2B" /<br>
-                                  "%2D" / "%2F" / "%3D" / "%3F" /<br>
-                                  "%5E" / "%5F" / "%60" / "%7B" /<br>
-                                  "%7C" / "%7D" / "%7E" <br>
-        SSIDCHAR                = unreservedAndPctEncoded<br>
-        SSID                    = 0*32SSIDCHAR<br>
-        <br>
-        STAPLING		    = "0" / "1" / "2"<br>
-                                ; 0 do not use OCSP stapling.<br>
-                                ; 1 try to use OCSP stapling.<br>
-                                ; 2 require valid OCSP stapling response.<br>
-                                <br>
-        ; start definition from RFC 7542<br>
-        label                   = utf8-rtext *(ldh-str)<br>
-        ldh-str                 = *( utf8-rtext / "-" ) utf8-rtext<br>
-        utf8-rtext              = ALPHA / DIGIT / UTF8-xtra-char<br>
-        UTF8-xtra-char          = UTF8-2 / UTF8-3 / UTF8-4<br>
-        UTF8-2                  = %xC2-DF UTF8-tail<br>
-        UTF8-3                  = %xE0 %xA0-BF UTF8-tail /<br>
-                                  %xE1-EC 2( UTF8-tail ) /<br>
-                                  %xED %x80-9F UTF8-tail /<br>
-                                  %xEE-EF 2( UTF8-tail )<br>
-        UTF8-4                  = %xF0 %x90-BF 2( UTF8-tail ) /<br>
-                                  %xF1-F3 3( UTF8-tail ) /<br>
-                                  %xF4 %x80-8F 2( UTF8-tail )<br>
-        UTF8-tail               = %x80-BF <br>
-        ; end definition from RFC 7542<br>
-        <br>
-        ; NOTE – standardized definitions above will be updated to be inherited from <br>
-        ; IETF RFCs, but are included in this draft to assist with ABNF checking<br>
-        <br>
-        ;-------------------------------------------------------------------------------<br>
-        ; Descriptions of key-Value Pairs<br>
-        ;-------------------------------------------------------------------------------<br>
-        <br>
-        ;-------------------------------------------------------------------------------<br>
-        ; OI Policy Description<br>
-        ;-------------------------------------------------------------------------------<br>
-        <br>
-        ; 1) value of home_ois key corresponds to one or more percent encoded, comma <br>
-        ; (",") delimited Organizational Identifiers (OIs) identifying the access <br>
-        ; networks that support authentication with this certificate. <br>
-        ; 2) value of required_home_ois key corresponds to one or more percent encoded, <br>
-        ; comma (",") delimited OIs that are required to be advertised by an AP for the <br>
-        ; credential to be considered matching.<br>
-        ; 3) value of roaming_consortiums key corresponds to one or more percent <br>
-        ; encoded, comma (",") delimited OIs identifying the roaming consortiums of <br>
-        ; which the provider of the certificate credential is a member. The list is <br>
-        ; sorted from the most preferred one to the least preferred one.<br>
-        <br>
-        ;-------------------------------------------------------------------------------<br>
-        ; FQDN Policy Description<br>
-        ;-------------------------------------------------------------------------------<br>
-        <br>
-        ; 1) value of domain key corresponds to one or more percent encoded, comma <br>
-        ; (",") delimited FQDNs that are compared against the Domain Name List <br>
-        ; advertised by an AP used to indicate that the AP is operated by the Home SP.<br>
-        ; 2) value of domain_suffix_match key corresponds to the FQDN used as a suffix <br>
-        ; match against the AAA server certificate.<br>
-        ; 3) value of roaming_partner key encodes a concatenation of FQDN, MATCH <br>
-        ; PRIORITY and COUNTRYCODE, separated by percent encoded comma(",").<br>
-        <br>
-        ;-------------------------------------------------------------------------------<br>
-        ; SSID Policy Description<br>
-        ;-------------------------------------------------------------------------------<br>
-        <br>
-        ; 1) value of excluded_ssid key corresponds to one or more percent encoded, <br>
-        ; comma (",") delimited SSIDs that are used to exclude specific SSIDs from <br>
-        ; matching with the network. <br>
-        <br>
-        ;-------------------------------------------------------------------------------<br>
+        ;-------------------------------------------------------------------------------<
+        ; URI based Hotspot2.0 Profile Provisioning<
+        ;
+        ; Wireless Broadband Alliance Inc.
+        ; 2024-05-28
+        ;-------------------------------------------------------------------------------
+        
+        hs20uri  = "hs20://" authority "/" [ keyValues ]
+        
+        keyValues     = keyValuePair *( ";" keyValuePair )
+        
+        keyValuePair  =  "home_ois" "=" OI *[ "%2C" OI] 
+        keyValuePair  =/ "required_home_ois" "=" OI *[ "%2C" OI]    
+        keyValuePair  =/ "roaming_consortiums" "=" OI *[ "%2C" OI]
+        
+        keyValuePair  =/ "domain" "=" FQDN *[ "%2C" FQDN]
+        keyValuePair  =/ "domain_suffix_match" "=" FQDN *[ "%2C" FQDN]
+        keyValuePair  =/ "roaming_partner" "=" FQDN "%2C" MATCH "%2C" PRIORITY
+                                               "%2C" COUNTRYCODE
+                                               
+        keyValuePair  =/ "excluded_ssid" "=" SSID *[ "%2C" SSID]
+        
+        keyValuePair  =/ "priority" "=" PRIORITY
+        keyValuePair  =/ "ocsp" "=" STAPLING
+        keyValuePair  =/ "realm" "=" FQDN
+        keyValuePair  =/ "username" "=" pctencoded-username
+        
+        
+        ;-------------------------------------------------------------------------------
+        ; Definitions
+        ;-------------------------------------------------------------------------------<
+        
+        authority               = ALPHA *( ALPHA / DIGIT / "-" / "." )
+        DIGIT                   = %x30-39 ; 0-9
+        NZDIGIT                 = %x31-39 ; 1-9
+        U4DIGIT                 = %x30-34 ; 0-4
+        U5DIGIT                 = %x30-35 ; 0-5
+        ALPHA                   = %x41-5A / %x61-7A
+        unreservedAndPctEncoded = unreserved / pct-encoded
+        unreserved              = ALPHA / DIGIT / "-" / "." / "_" / "~"
+        pct-encoded             = "%" UPPERHEXDIG UPPERHEXDIG
+        UPPERHEXDIG             = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
+        LOWERHEXDIG             = DIGIT / "a" / "b" / "c" / "d" / "e" / "f"
+        OI                      = 6*10LOWERHEXDIG
+        MATCH                   = "0" / "1"
+                                ; 0 exact match.
+                                ; 1 include subdomains.
+                                
+        PRIORITY                = DIGIT / (NZDIGIT DIGIT) / ("1" DIGIT DIGIT) / 
+                                  ("2" U4DIGIT DIGIT) / ("2" U5DIGIT U5DIGIT)
+                                ; 0...255
+                                
+        COUNTRYCODE             = 2*ALPHA / "%2A" 
+                                ; where %2A is the percent encoding of "*"
+        FQDN                    = 1*( label "." ) label
+        pctencoded-username	    = pctencodedstring *("." pctencodedstring)
+        pctencodedstring        = 1*pctencdedutf8-atext
+        pctencdedutf8-atext	    = ALPHA/ DIGIT /
+                                  UTF8-xtra-char /
+                                  "%21" / "%23" / "%24" / "%25" /
+                                  "%26" / "%27" / "%2A" / "%2B" /
+                                  "%2D" / "%2F" / "%3D" / "%3F" /
+                                  "%5E" / "%5F" / "%60" / "%7B" /
+                                  "%7C" / "%7D" / "%7E" 
+        SSIDCHAR                = unreservedAndPctEncoded
+        SSID                    = 0*32SSIDCHAR
+        
+        STAPLING		    = "0" / "1" / "2"
+                                ; 0 do not use OCSP stapling.
+                                ; 1 try to use OCSP stapling.
+                                ; 2 require valid OCSP stapling response.
+                                
+        ; start definition from RFC 7542
+        label                   = utf8-rtext *(ldh-str)
+        ldh-str                 = *( utf8-rtext / "-" ) utf8-rtext
+        utf8-rtext              = ALPHA / DIGIT / UTF8-xtra-char
+        UTF8-xtra-char          = UTF8-2 / UTF8-3 / UTF8-4
+        UTF8-2                  = %xC2-DF UTF8-tail
+        UTF8-3                  = %xE0 %xA0-BF UTF8-tail /
+                                  %xE1-EC 2( UTF8-tail ) /
+                                  %xED %x80-9F UTF8-tail /
+                                  %xEE-EF 2( UTF8-tail /
+        UTF8-4                  = %xF0 %x90-BF 2( UTF8-tail ) /
+                                  %xF1-F3 3( UTF8-tail ) /
+                                  %xF4 %x80-8F 2( UTF8-tail )
+        UTF8-tail               = %x80-BF 
+        ; end definition from RFC 7542
+        
+        ; NOTE – standardized definitions above will be updated to be inherited from 
+        ; IETF RFCs, but are included in this draft to assist with ABNF checking
+        
+        ;-------------------------------------------------------------------------------
+        ; Descriptions of key-Value Pairs
+        ;-------------------------------------------------------------------------------
+        
+        ;-------------------------------------------------------------------------------
+        ; OI Policy Description
+        ;-------------------------------------------------------------------------------
+        
+        ; 1) value of home_ois key corresponds to one or more percent encoded, comma 
+        ; (",") delimited Organizational Identifiers (OIs) identifying the access 
+        ; networks that support authentication with this certificate. 
+        ; 2) value of required_home_ois key corresponds to one or more percent encoded, 
+        ; comma (",") delimited OIs that are required to be advertised by an AP for the 
+        ; credential to be considered matching.
+        ; 3) value of roaming_consortiums key corresponds to one or more percent 
+        ; encoded, comma (",") delimited OIs identifying the roaming consortiums of 
+        ; which the provider of the certificate credential is a member. The list is 
+        ; sorted from the most preferred one to the least preferred one.
+        
+        ;-------------------------------------------------------------------------------
+        ; FQDN Policy Description
+        ;-------------------------------------------------------------------------------
+        
+        ; 1) value of domain key corresponds to one or more percent encoded, comma 
+        ; (",") delimited FQDNs that are compared against the Domain Name List 
+        ; advertised by an AP used to indicate that the AP is operated by the Home SP.
+        ; 2) value of domain_suffix_match key corresponds to the FQDN used as a suffix 
+        ; match against the AAA server certificate.
+        ; 3) value of roaming_partner key encodes a concatenation of FQDN, MATCH 
+        ; PRIORITY and COUNTRYCODE, separated by percent encoded comma(",").
+        
+        ;-------------------------------------------------------------------------------
+        ; SSID Policy Description
+        ;-------------------------------------------------------------------------------
+        
+        ; 1) value of excluded_ssid key corresponds to one or more percent encoded, 
+        ; comma (",") delimited SSIDs that are used to exclude specific SSIDs from 
+        ; matching with the network. 
+        
+        ;-------------------------------------------------------------------------------
         ; Credential Policy Description<br>
-        ;-------------------------------------------------------------------------------<br>
-        <br>
-        ; 1) value of priority key corresponds to the priority of the certificate <br>
-        ; credential, i.e., PRIORITY. The higher the priority, the more preferred the <br>
-        ; credential.<br>
-        ; 2) value of ocsp key corresponds the OCSP stapling policy.<br>
-        ; 3) the value of realm key encodes the realm associated with the credential.<br>
-        ; 3) the value of username key encodes the username to be used with the <br>
-        ; credential.<br>
-        <br>
+        ;-------------------------------------------------------------------------------
+        
+        ; 1) value of priority key corresponds to the priority of the certificate 
+        ; credential, i.e., PRIORITY. The higher the priority, the more preferred the 
+        ; credential.
+        ; 2) value of ocsp key corresponds the OCSP stapling policy.
+        ; 3) the value of realm key encodes the realm associated with the credential.
+        ; 3) the value of username key encodes the username to be used with the 
+        ; credential.<
+        
         </code>
+ 
         
         <h1>4.	Scheme Semantics</h1>
         
@@ -371,8 +375,8 @@
           </tr>          
         </table>
 
-        
         <br>
+        
         <p>Corresponding URI based provisioning:</p>
         
         <code>
