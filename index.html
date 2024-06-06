@@ -32,7 +32,10 @@
     font-size: 200%;
   }
 
-  code { white-space: pre }
+  code { 
+      white-space: pre;
+      color: gray;
+  }
 
 </style>
 
@@ -280,7 +283,7 @@
         ; 2) value of ocsp key corresponds the OCSP stapling policy.
         ; 3) the value of realm key encodes the realm associated with the credential.
         ; 3) the value of username key encodes the username to be used with the 
-        ; credential.<
+        ; credential.
         
         </code>
  
@@ -396,7 +399,7 @@
         <p>A certificate of a locally significant device ID (LDevID) certificate can be used with the following URI to enable the automated provisioning of realm and RCOI information to allow the device to leverage the OpenRoaming federation together with an EAP-TLS exchange defined in IEEE 802.1AR to authenticate onto third party networks.</p>
         
         <code>
-        URI=hs20://enterprise.com/ roaming_consortiums=5a03ba0000%2C5a03ba0200;realm=aaa.enterprise.com;ocsp=1
+        URI=hs20://enterprise.com/roaming_consortiums=5a03ba0000%2C5a03ba0200;realm=aaa.enterprise.com;ocsp=1
         </code>
         
         <h1>6.	Interoperability considerations</h1>
