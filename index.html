@@ -371,7 +371,7 @@
         <p>A certificate of an initial device ID (IDevID) certificate can be used with the following attribute value to enable the automated provisioning of realm and RCOI information to allow the device to leverage the OpenRoaming federation <a href="#OPENROAMING">[OPENROAMING]</a> together with an EAP-TLS exchange defined in IEEE 802.1AR to authenticate onto third party networks, e.g.,  to then enable the provisioning of a locally significant device ID certificate, or other any other type of OpenRoaming credential.</p>
         
         <code>
-        attributeValue roaming_consortiums=5a03ba0000;realm=onboarding-service.arbutus-widgets.com;ocsp=1
+        attributeValue username=anonymous;roaming_consortiums=5a03ba0000;realm=onboarding-service.arbutus-widgets.com;ocsp=1
         </code>
         
         <h3>4.1.3	IEEE 802.1AR Locally Significant Dev-ID Example</h3>
@@ -379,7 +379,7 @@
         <p>A certificate of a locally significant device ID (LDevID) certificate can be used with the following attribute value to enable the automated provisioning of realm and RCOI information to allow the device to leverage the OpenRoaming federation together with an EAP-TLS exchange defined in IEEE 802.1AR to authenticate onto third party networks.</p>
         
         <code>
-        attributeValue roaming_consortiums=5a03ba0000%2C5a03ba0200;realm=aaa.enterprise.com;ocsp=1
+        attributeValue username=anonymous;roaming_consortiums=5a03ba0000%2C5a03ba0200;realm=aaa.enterprise.com;ocsp=1
         </code>
         
         
