@@ -397,7 +397,23 @@
 
         <p>A clone of  git://w1.fi/hostap.git has been used to demonstrate the use of the WBA certificate attribute for Passpoint profile provisioning and is available <a href="https://github.com/iot-onboarding/iot-supplicant/tree/wba-ppsmo-attr">here</a>.</p>
 
-        <p>The log from wpa_supplicant is shown below:</p>
+        <p>A client has been issued to an end device, where the issuing certificate authority adds the WBA Passpoint attribute to the issued certificate using the openSSL configuration:</p>
+        <code>
+            1.3.6.1.4.1.14122.1.2.1=ASN1:IA5STRING:username=anonymous;roaming_consortiums=00000c;realm=onboarding.widgets.com
+        </code>
+        <p>The certificate is used in the configuration file, ppsmo.conf, which specifies a simple EAP-TLS credential block and no Passpoint attributes:</p>
+        <code>
+        ctrl_interface=/var/run/wpa_supplicant
+        cred={
+                ca_cert="/etc/ssl/certs/ca.pem"
+                private_key="/etc/ssl/certs/ppsmo-client.key"
+                private_key_password="pa55w0rd"
+                client_cert="/etc/ssl/certs/ppsmo-client.pem"
+        }    
+        </code>
+
+        <p>The corresponding log from wpa_supplicant is shown below. This demonstrates that the Passpoint attributes have been recovered brom the certificate
+        and used to augment the credential block while enabling automatic Passpoint network selection.</p>
         <code>
         sudo ./wpa_supplicant -c ppsmo.conf -iwlan1 -Dnl80211,wext
         Successfully initialized wpa_supplicant
