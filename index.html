@@ -401,21 +401,21 @@
         <code>
             1.3.6.1.4.1.14122.1.2.1=ASN1:IA5STRING:username=anonymous;roaming_consortiums=00000c;realm=onboarding.widgets.com
         </code>
-        <p>The certificate is used in the configuration file, ppsmo.conf, which specifies a simple EAP-TLS credential block and no Passpoint attributes:</p>
+        <p>The certificate is used in the configuration file, simple-eap-tls.conf, which specifies an EAP-TLS credential block but includes <b>no Passpoint attributes</b>:</p>
         <code>
         ctrl_interface=/var/run/wpa_supplicant
         cred={
                 ca_cert="/etc/ssl/certs/ca.pem"
-                private_key="/etc/ssl/certs/ppsmo-client.key"
+                private_key="/etc/ssl/certs/eaptls-client.key"
                 private_key_password="pa55w0rd"
-                client_cert="/etc/ssl/certs/ppsmo-client.pem"
+                client_cert="/etc/ssl/certs/eaptls-client.pem"
         }    
         </code>
 
         <p>The corresponding log from wpa_supplicant is shown below. This demonstrates that the Passpoint attributes have been recovered brom the certificate
         and used to augment the credential block while enabling automatic Passpoint network selection.</p>
         <code>
-        sudo ./wpa_supplicant -c ppsmo.conf -iwlan1 -Dnl80211,wext
+        sudo ./wpa_supplicant -c simple-eap-tls.conf -iwlan1 -Dnl80211,wext
         Successfully initialized wpa_supplicant
         cert-ppsmo: Found WBA PPSMO Attribute
         cert-ppsmo: Attribtue value username=anonymous;roaming_consortiums=00000c;realm=onboarding.widgets.com
